@@ -23,10 +23,25 @@ RUN apt-get install curl gnupg2 ca-certificates lsb-release debian-archive-keyri
 
 COPY requirements.txt .
 
+RUN python -m venv .dev && \
+    /bin/bash -c "source .dev/bin/activate && pip install --upgrade pip && pip install -r requirements.txt"
+
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-EXPOSE 8000
+WORKDIR /etc/nginx
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+RUN mv nginx.conf nginx.conf.bak
+
+WORKDIR /app/production
+
+RUN mv nginx.conf /etc/nginx/ && \
+    mv gunicorn_config.py .. && \
+    mv gunicorn.service /etc/systemd/system/gunicorn.service
+
+WORKDIR /app
+
+EXPOSE 80
+
+CMD ["sh", "-c", "service nginx start && gunicorn --config gunicorn_config.py blog.wsgi:application"]
