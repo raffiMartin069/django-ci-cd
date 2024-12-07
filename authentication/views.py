@@ -20,7 +20,7 @@ def login_request(request):
             }
             return JsonResponse(response)
         else:
-            return JsonResponse({"message": "Invalid email or password"}, status=400)
+            return JsonResponse({"message": "Invalid email or password"}, status=400);;;as;d
 
     # Handle non-POST requests
     return JsonResponse({"message": "Only POST method is allowed"}, status=405)
