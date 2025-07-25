@@ -63,7 +63,7 @@ jobs:
         with:
           push: true
           tags: ${{ vars.DOCKERHUB_USERNAME }}/django:${{ env.date }}.latest
-
+# Dockerizing
   ghcr:
     runs-on: ubuntu-latest
   
